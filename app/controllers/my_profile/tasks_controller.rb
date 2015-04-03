@@ -1,7 +1,7 @@
 class TasksController < MyProfileController
 
   protect 'perform_task', :profile
-  
+
   def index
     @filter = params[:filter_type].blank? ? nil : params[:filter_type]
     @task_types = Task.pending_types_for(profile)
@@ -62,7 +62,7 @@ class TasksController < MyProfileController
   end
 
   def ticket_details
-    @ticket = Ticket.find(:first, :conditions => ['(requestor_id = ? or target_id = ?) and id = ?', profile.id, profile.id, params[:id]])
+    @ticket = Ticket.where('(requestor_id = ? or target_id = ?) and id = ?', profile.id, profile.id, params[:id]).first
   end
 
 end

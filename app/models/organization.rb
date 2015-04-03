@@ -54,7 +54,7 @@ class Organization < Profile
   end
 
   def find_pending_validation(code)
-    validations.pending.find(:first, :conditions => {:code => code})
+    validations.pending.where(code: code).first
   end
 
   def processed_validations
@@ -62,7 +62,7 @@ class Organization < Profile
   end
 
   def find_processed_validation(code)
-    validations.finished.find(:first, :conditions => {:code => code})
+    validations.finished.where(code: code).first
   end
 
   def is_validation_entity?
@@ -154,7 +154,7 @@ class Organization < Profile
   end
 
   def already_request_membership?(person)
-    self.tasks.pending.find_by_requestor_id(person.id, :conditions => { :type => 'AddMember' })
+    self.tasks.pending.where(type: 'AddMember', requestor_id: person.id).first
   end
 
   def jid(options = {})

@@ -16,7 +16,7 @@ class Block < ActiveRecord::Base
 
   acts_as_having_settings
 
-  scope :enabled, :conditions => { :enabled => true }
+  scope :enabled, -> { where :enabled => true }
 
   def embedable?
     false

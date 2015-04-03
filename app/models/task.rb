@@ -231,23 +231,24 @@ class Task < ActiveRecord::Base
     end
   end
 
-  scope :pending, :conditions => { :status =>  Task::Status::ACTIVE }
-  scope :hidden, :conditions => { :status =>  Task::Status::HIDDEN }
-  scope :finished, :conditions => { :status =>  Task::Status::FINISHED }
-  scope :canceled, :conditions => { :status =>  Task::Status::CANCELLED }
-  scope :closed, :conditions => { :status =>  [Task::Status::CANCELLED, Task::Status::FINISHED] }
-  scope :opened, :conditions => { :status =>  [Task::Status::ACTIVE, Task::Status::HIDDEN] }
-  scope :of, lambda { |type| conditions = type ? "type LIKE '#{type}'" : "1=1"; {:conditions =>  [conditions]} }
-  scope :order_by, lambda { |attribute, ord| {:order => "#{attribute} #{ord}"} }
+  scope :pending, -> { where status: Task::Status::ACTIVE }
+  scope :hidden, -> { where status: Task::Status::HIDDEN }
+  scope :finished, -> { where status: Task::Status::FINISHED }
+  scope :canceled, -> { where status: Task::Status::CANCELLED }
+  scope :closed, -> { where status: [Task::Status::CANCELLED, Task::Status::FINISHED] }
+  scope :opened, -> { where status: [Task::Status::ACTIVE, Task::Status::HIDDEN] }
+  scope :of, -> (type) { where "type LIKE ?", type if type }
+  scope :order_by, -> (attribute, ord) { order "#{attribute} #{ord}" }
 
   scope :to, lambda { |profile|
     environment_condition = nil
     if profile.person?
-      envs_ids = Environment.find(:all).select{ |env| profile.is_admin?(env) }.map { |env| "target_id = #{env.id}"}.join(' OR ')
+      envs_ids = Environment.all.select{ |env| profile.is_admin?(env) }.map{ |env| "target_id = #{env.id}"}.join(' OR ')
       environment_condition = envs_ids.blank? ? nil : "(target_type = 'Environment' AND (#{envs_ids}))"
     end
     profile_condition = "(target_type = 'Profile' AND target_id = #{profile.id})"
-    { :conditions => [environment_condition, profile_condition].compact.join(' OR ') }
+
+    where [environment_condition, profile_condition].compact.join(' OR ')
   }
 
   def self.pending_types_for(profile)
@@ -310,7 +311,7 @@ class Task < ActiveRecord::Base
     #
     # Can be used in subclasses to find only their instances.
     def find_by_code(code)
-      self.find(:first, :conditions => { :code => code, :status => Task::Status::ACTIVE })
+      self.where(code: code, status: Task::Status::ACTIVE)
     end
 
     def per_page
