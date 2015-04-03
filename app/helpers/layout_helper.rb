@@ -54,12 +54,12 @@ module LayoutHelper
     plugins_stylesheets = @plugins.select(&:stylesheet?).map { |plugin| plugin.class.public_path('style.css') }
 
     output = ''
-    output += stylesheet_link_tag standard_stylesheets, :cache => 'cache/application'
+    output += stylesheet_link_tag *standard_stylesheets, :cache => 'cache/application'
     output += stylesheet_link_tag template_stylesheet_path
-    output += stylesheet_link_tag icon_theme_stylesheet_path
+    output += stylesheet_link_tag *icon_theme_stylesheet_path
     output += stylesheet_link_tag jquery_ui_theme_stylesheet_path
     unless plugins_stylesheets.empty?
-      output += stylesheet_link_tag plugins_stylesheets, :cache => "cache/plugins-#{Digest::MD5.hexdigest plugins_stylesheets.to_s}"
+      output += stylesheet_link_tag *plugins_stylesheets, :cache => "cache/plugins-#{Digest::MD5.hexdigest plugins_stylesheets.to_s}"
     end
     output += stylesheet_link_tag theme_stylesheet_path
     output
