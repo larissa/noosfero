@@ -771,7 +771,7 @@ class Article < ActiveRecord::Base
   end
 
   def first_image
-    img = Nokogiri::HTML.fragment(self.lead.to_s).css('img[src]').first || Nokogiri::HTML.fragment(self.body.to_s).search('img').first
+    img = Nokogiri::HTML.fragment(self.lead.to_s).css('img[src]').first || Nokogiri::HTML.fragment(self.body.to_s).css('img').first
     img.nil? ? '' : img['src']
   end
 
