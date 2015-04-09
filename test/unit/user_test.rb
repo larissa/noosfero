@@ -297,7 +297,7 @@ class UserTest < ActiveSupport::TestCase
 
   should 'not has email activation pending if not have environment' do
     user = create_user('cooler')
-    user.expects(:environment).returns(nil)
+    user.expects(:environment).returns(nil).at_least_once
     EmailActivation.create!(:requestor => user.person, :target => Environment.default)
     assert !user.email_activation_pending?
   end
@@ -355,7 +355,7 @@ class UserTest < ActiveSupport::TestCase
     Person.any_instance.stubs(:created_at).returns(DateTime.parse('16-08-2010'))
     expected_hash = {
       'login' => 'x_and_y', 'is_admin' => true, 'since_month' => 8,
-      'chat_enabled' => false, 'since_year' => 2010, 'email_domain' => nil, 
+      'chat_enabled' => false, 'since_year' => 2010, 'email_domain' => nil,
       'amount_of_friends' => 0, 'friends_list' => {}, 'enterprises' => [],
     }
 
@@ -462,9 +462,9 @@ class UserTest < ActiveSupport::TestCase
 
   should 'respond name with user name attribute' do
     user = create_user('testuser')
+    user.login = 'Login User'
     user.person = nil
     user.name = 'Another User'
-    user.login = 'Login User'
     assert_equal 'Another User', user.name
   end
 
