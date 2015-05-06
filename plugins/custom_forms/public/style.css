@@ -89,3 +89,20 @@ tr.addition-buttons {
   border: 1px solid #BBB;
   border-radius: 4px;
 }
+
+#custom-forms-plugin_submission .notify {
+  padding: 8px;
+  color: rgba(0,0,0,0.5);
+}
+
+#custom-forms-plugin_submission-view th {
+  border: none;
+  text-align: right;
+}
+#custom-forms-plugin_submission-view td {
+  padding: 5px 0;
+}
+
+#custom-forms-plugin_submission-view td img {
+  vertical-align: middle;
+}
