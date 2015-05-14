@@ -15,13 +15,7 @@
     <% if author = @submission.profile %>
       <td>
         <%=
-          #author = @submission.profile
-          if author.image.present?
-            img = image_tag author.image.public_filename(:portrait)
-          else
-            img = image_tag gravatar_profile_image_url author.email, :size=>64, :d => gravatar_default
-          end
-          link_to img +' '+ author.name, author.url
+          link_to image_tag(profile_icon(author, :portrait)) +' '+ author.name, author.url
         %>
       </td>
     <% else %>
@@ -37,7 +31,16 @@
 <% @submission.q_and_a.each do |field, answer| %>
   <tr>
     <th><%= sanitizer.sanitize field.name %></th>
-    <td><%= sanitizer.sanitize answer.to_s.gsub("\n", '<br>') %></td>
+    <td><%=
+      answer = if answer.field.alternatives.blank?
+        answer.to_s.gsub("\n", '<br>')
+      else
+        content_tag :ul do
+          answer.to_text_list.map {|a| content_tag :li, a }.join("\n")
+        end
+      end
+      sanitizer.sanitize answer
+    %></td>
   </tr>
 <% end %>
 </table>
