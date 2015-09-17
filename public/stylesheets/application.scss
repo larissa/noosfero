@@ -2747,6 +2747,9 @@ div#activation_enterprise label, div#activation_enterprise input, div#activation
 #profile_change_picture label {
   display: none;
 }
+#profile_change_picture #image-builder-remove-checkbox > .formfieldline > label {
+  display: block;
+}
 #profile_change_picture img {
   margin-left: 10px;
 }

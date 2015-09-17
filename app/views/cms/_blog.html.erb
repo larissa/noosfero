@@ -60,10 +60,6 @@
   <%= _("Max size: %s (.jpg, .gif, .png)")% Image.max_size.to_humanreadable %>
 <% end %>
 
-<% unless @article.image.nil? %>
-  <%= labelled_check_box(_('Remove cover image'),'remove_image',true,false)%>
-<% end %>
-
 <%= labelled_form_field(_('How to display posts:'), f.select(:visualization_format, [
   [ _('Full post'), 'full'],
   [ _('First paragraph'), 'short'],
