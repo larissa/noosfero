@@ -703,7 +703,7 @@ class Article < ActiveRecord::Base
   end
 
   def author_by_version(version_number = nil)
-    version_number ? profile.environment.people.find_by_id(get_version(version_number).author_id) : author
+    version_number ? profile.environment.people.find_by_id(get_version(version_number).last_changed_by_id) : author
   end
 
   def author_name(version_number = nil)
