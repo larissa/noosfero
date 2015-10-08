@@ -1,11 +1,3 @@
-notifications:
-  irc:
-    channels:
-      - "chat.freenode.net#noosfero"
-      - "chat.freenode.net#noosfero-br"
-    template:
-      - "%{repository_slug} %{branch} %{commit} %{commit_subject} - %{result} %{build_url}"
-
 language: ruby
 rvm:
 # for 2.2 support we need to upgrade the pg gem
