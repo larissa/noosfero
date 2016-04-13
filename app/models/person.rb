@@ -1,6 +1,8 @@
 # A person is the profile of an user holding all relationships with the rest of the system
 class Person < Profile
 
+  include Human
+
   attr_accessible :organization, :contact_information, :sex, :birth_date, :cell_phone, :comercial_phone, :jabber_id, :personal_website, :nationality, :address_reference, :district, :schooling, :schooling_status, :formation, :custom_formation, :area_of_study, :custom_area_of_study, :professional_activity, :organization_website, :following_articles
 
   SEARCH_FILTERS = {
@@ -85,7 +87,6 @@ class Person < Profile
     memberships.where('role_assignments.role_id = ?', role.id)
   end
 
-  has_many :comments, :foreign_key => :author_id
   has_many :article_followers, :dependent => :destroy
   has_many :following_articles, :class_name => 'Article', :through => :article_followers, :source => :article
   has_many :friendships, :dependent => :destroy
@@ -96,8 +97,6 @@ class Person < Profile
   }
 
   has_many :requested_tasks, :class_name => 'Task', :foreign_key => :requestor_id, :dependent => :destroy
-
-  has_many :abuse_reports, :foreign_key => 'reporter_id', :dependent => :destroy
 
   has_many :mailings
 
@@ -119,15 +118,6 @@ class Person < Profile
   }, through: :suggested_profiles, source: :suggestion
 
   scope :more_popular, -> { order 'friends_count DESC' }
-
-  scope :abusers, -> {
-    joins(:abuse_complaints).where('tasks.status = 3').distinct.select('profiles.*')
-  }
-  scope :non_abusers, -> {
-    distinct.select("profiles.*").
-    joins("LEFT JOIN tasks ON profiles.id = tasks.requestor_id AND tasks.type='AbuseComplaint'").
-    where("tasks.status != 3 OR tasks.id is NULL")
-  }
 
   scope :admins, -> { joins(:role_assignments => :role).where('roles.key = ?', 'environment_administrator') }
   scope :activated, -> { joins(:user).where('users.activation_code IS NULL AND users.activated_at IS NOT NULL') }
@@ -512,21 +502,6 @@ class Person < Profile
     end
     profile.remove_member(self)
     leave_hash.to_json
-  end
-
-  def already_reported?(profile)
-    abuse_reports.any? { |report| report.abuse_complaint.reported == profile && report.abuse_complaint.opened? }
-  end
-
-  def register_report(abuse_report, profile)
-    AbuseComplaint.create!(:reported => profile, :target => profile.environment) if !profile.opened_abuse_complaint
-    abuse_report.abuse_complaint = profile.opened_abuse_complaint
-    abuse_report.reporter = self
-    abuse_report.save!
-  end
-
-  def abuser?
-    AbuseComplaint.finished.where(:requestor_id => self).count > 0
   end
 
   def control_panel_settings_button
