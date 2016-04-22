@@ -2,15 +2,15 @@ module Human
   extend ActiveSupport::Concern
 
   included do
-    has_many :comments, :foreign_key => :author_id
-    has_many :abuse_reports, :foreign_key => 'reporter_id', :dependent => :destroy
+    has_many :comments, :as => :author, :foreign_key => :author_id
+    has_many :abuse_reports, :as => :reporter, :foreign_key => 'reporter_id', :dependent => :destroy
 
     scope :abusers, -> {
-      joins(:abuse_complaints).where('tasks.status = 3').distinct.select('profiles.*')
+      joins(:abuse_complaints).where('tasks.status = 3').distinct.select("#{self.table_name}.*")
     }
     scope :non_abusers, -> {
-      distinct.select("profiles.*").
-      joins("LEFT JOIN tasks ON profiles.id = tasks.requestor_id AND tasks.type='AbuseComplaint'").
+      distinct.select("#{self.table_name}.*").
+      joins("LEFT JOIN tasks ON #{self.table_name}.id = tasks.requestor_id AND tasks.type='AbuseComplaint'").
       where("tasks.status != 3 OR tasks.id is NULL")
     }
   end

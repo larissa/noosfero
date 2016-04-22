@@ -6,7 +6,7 @@ class Profile < ActiveRecord::Base
   include ProfileEntity
 
   attr_accessible :public_profile, :nickname, :custom_footer, :custom_header, :address, :zip_code, :contact_phone, :image_builder, :description, :closed, :template_id, :lat, :lng, :is_template, :fields_privacy, :preferred_domain_id, :category_ids, :country, :city, :state, :national_region_code, :email, :contact_email, :redirect_l10n, :notification_time,
-    :custom_url_redirection, :email_suggestions, :allow_members_to_invite, :invite_friends_only, :secret, :profile_admin_mail_notification
+    :custom_url_redirection, :email_suggestions, :allow_members_to_invite, :invite_friends_only, :secret, :profile_admin_mail_notification, :redirection_after_login
 
   # use for internationalizable human type names in search facets
   # reimplement on subclasses
@@ -409,14 +409,6 @@ class Profile < ActiveRecord::Base
     if template_id.present? && template && !template.is_template
       errors.add(:template, _('is not a template.'))
     end
-  end
-
-  before_create :set_default_environment
-  def set_default_environment
-    if self.environment.nil?
-      self.environment = Environment.default
-    end
-    true
   end
 
   # registar callback for creating boxes after the object is created.
@@ -1098,6 +1090,10 @@ private :generate_url, :url_options
     display_private_info_to?(current_person) || (public_fields.include?(field) && public?)
   end
 
+  validates_inclusion_of :redirection_after_login, :in => Environment.login_redirection_options.keys, :allow_nil => true
+  def preferred_login_redirection
+    redirection_after_login.blank? ? environment.redirection_after_login : redirection_after_login
+  end
   settings_items :custom_url_redirection, type: String, default: nil
 
   def remove_from_suggestion_list(person)
