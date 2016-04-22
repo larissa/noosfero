@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
   before_filter :allow_cross_domain_access
 
   include AuthenticatedSystem
+  include ExternalAuthenticatedSystem
+
   before_filter :require_login_for_environment, :if => :private_environment?
 
   before_filter :verify_members_whitelist, :if => [:private_environment?, :user]

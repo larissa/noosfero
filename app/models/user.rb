@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
 
   attr_accessible :login, :email, :password, :password_confirmation, :activated_at
 
+  include ExternalUser
+
   N_('Password')
   N_('Password confirmation')
   N_('Terms accepted')
@@ -147,7 +149,8 @@ class User < ActiveRecord::Base
       u.generate_private_token_if_not_exist
       return u
     end
-    return nil
+
+    return User.external_authenticate(login, password, environment)
   end
 
   def register_login
