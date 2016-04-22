@@ -823,7 +823,7 @@ module ApplicationHelper
       {s_('contents|More viewed') => {href: url_for({host: host, controller: 'search', action: 'contents', filter: 'more_popular'})}},
       {s_('contents|Most commented') => {href: url_for({host: host, controller: 'search', action: 'contents', filter: 'more_comments'})}}
     ]
-    if logged_in?
+    if logged_in? && !current_user.external_person_id
       links.push(_('New content') => modal_options({:href => url_for({:controller => 'cms', :action => 'new', :profile => current_user.login, :cms => true})}))
     end
 
@@ -839,7 +839,7 @@ module ApplicationHelper
        {s_('people|More active') => {href: url_for({host: host, controller: 'search', action: 'people', filter: 'more_active'})}},
        {s_('people|More popular') => {href: url_for({host: host, controller: 'search', action: 'people', filter: 'more_popular'})}}
      ]
-     if logged_in?
+     if logged_in? && !current_user.external_person_id
        links.push(_('My friends') => {:href => url_for({:profile => current_user.login, :controller => 'friends'})})
        links.push(_('Invite friends') => {:href => url_for({:profile => current_user.login, :controller => 'invite', :action => 'friends'})})
      end
@@ -856,7 +856,7 @@ module ApplicationHelper
        {s_('communities|More active') => {href: url_for({host: host, controller: 'search', action: 'communities', filter: 'more_active'})}},
        {s_('communities|More popular') => {href: url_for({host: host, controller: 'search', action: 'communities', filter: 'more_popular'})}}
      ]
-     if logged_in?
+     if logged_in? && !current_user.external_person_id
        links.push(_('My communities') => {:href => url_for({:profile => current_user.login, :controller => 'memberships'})})
        links.push(_('New community') => {:href => url_for({:profile => current_user.login, :controller => 'memberships', :action => 'new_community'})})
      end

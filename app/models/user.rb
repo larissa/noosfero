@@ -149,7 +149,7 @@ class User < ActiveRecord::Base
       u.generate_private_token_if_not_exist
       return u
     end
-
+    
     return User.external_authenticate(login, password, environment)
   end
 

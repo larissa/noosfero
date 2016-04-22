@@ -1020,6 +1020,11 @@ class Environment < ActiveRecord::Base
     HashWithIndifferentAccess.new :name => name
   end
 
+  def has_federated_network?(domain)
+    # FIXME: Should return whether "domain" is whitelisted in this environment as a federated network
+    true
+  end
+
   private
 
   def default_language_available
