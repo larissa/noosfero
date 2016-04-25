@@ -35,4 +35,34 @@ module ProfileEntity
     true
   end
 
+  # returns +false+
+  def person?
+    self.kind_of?(Person)
+  end
+
+  def enterprise?
+    self.kind_of?(Enterprise)
+  end
+
+  def organization?
+    self.kind_of?(Organization)
+  end
+
+  def community?
+    self.kind_of?(Community)
+  end
+
+  include ActionView::Helpers::TextHelper
+  def short_name(chars = 40)
+    if self[:nickname].blank?
+      if chars
+        truncate self.name, length: chars, omission: '...'
+      else
+        self.name
+      end
+    else
+      self[:nickname]
+    end
+  end
+
 end

@@ -142,7 +142,7 @@ module ApplicationHelper
         {s_('contents|Most commented') => {:href => url_for({host: host, :controller => 'search', :action => 'contents', :filter => 'more_comments'})}}
       ]
       if logged_in?
-        links.push(_('New content') => modal_options({href: url_for({controller: 'cms', action: 'new', profile: current_user.login, cms: true})}))
+        links.push(_('New content') => modal_options({href: url_for({controller: 'cms', action: 'new', profile: current_person.identifier, cms: true})}))
       end
 
       links.each do |link|
@@ -173,8 +173,8 @@ module ApplicationHelper
         {s_('people|More popular') => {:href => url_for({host: host, :controller => 'search', :action => 'people', :filter => 'more_popular'})}}
       ]
       if logged_in?
-        links.push(_('My friends') => {href: url_for({profile: current_user.login, controller: 'friends'})})
-        links.push(_('Invite friends') => {href: url_for({profile: current_user.login, controller: 'invite', action: 'friends'})})
+        links.push(_('My friends') => {href: url_for({profile: current_person.identifier, controller: 'friends'})})
+        links.push(_('Invite friends') => {href: url_for({profile: current_person.identifier, controller: 'invite', action: 'friends'})})
       end
 
       links.each do |link|
@@ -205,8 +205,8 @@ module ApplicationHelper
         {s_('communities|More popular') => {:href => url_for({host: host, :controller => 'search', :action => 'communities', :filter => 'more_popular'})}}
       ]
       if logged_in?
-        links.push(_('My communities') => {href: url_for({profile: current_user.login, controller: 'memberships'})})
-        links.push(_('New community') => {href: url_for({profile: current_user.login, controller: 'memberships', action: 'new_community'})})
+        links.push(_('My communities') => {href: url_for({profile: current_person.identifier, controller: 'memberships'})})
+        links.push(_('New community') => {href: url_for({profile: current_person.identifier, controller: 'memberships', action: 'new_community'})})
       end
 
       links.each do |link|

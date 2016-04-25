@@ -549,23 +549,6 @@ class Profile < ActiveRecord::Base
     environment
   end
 
-  # returns +false+
-  def person?
-    self.kind_of?(Person)
-  end
-
-  def enterprise?
-    self.kind_of?(Enterprise)
-  end
-
-  def organization?
-    self.kind_of?(Organization)
-  end
-
-  def community?
-    self.kind_of?(Community)
-  end
-
   # returns false.
   def is_validation_entity?
     false
@@ -801,19 +784,6 @@ private :generate_url, :url_options
   def accept_category?(cat)
     forbidden = [ ProductCategory, Region ]
     !forbidden.include?(cat.class)
-  end
-
-  include ActionView::Helpers::TextHelper
-  def short_name(chars = 40)
-    if self[:nickname].blank?
-      if chars
-        truncate self.name, length: chars, omission: '...'
-      else
-        self.name
-      end
-    else
-      self[:nickname]
-    end
   end
 
   def custom_header

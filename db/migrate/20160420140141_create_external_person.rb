@@ -4,9 +4,11 @@ class CreateExternalPerson < ActiveRecord::Migration
       t.string :name
       t.string :identifier
       t.string :source
-      t.string :email_md5_hash
+      t.string :email
       t.integer :environment_id
       t.boolean :visible, default: true
+      t.datetime :created_at
+      t.datetime :updated_at
     end
   end
 end

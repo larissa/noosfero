@@ -147,12 +147,12 @@ module ApplicationHelper
   end
 
   def link_to_cms(text, profile = nil, options = {})
-    profile ||= current_user.login
+    profile ||= current_person.identifier
     link_to text, myprofile_path(:controller => 'cms', :profile => profile), options
   end
 
   def link_to_profile(text, profile = nil, options = {})
-    profile ||= current_user.login
+    profile ||= current_person.identifier
     link_to text, profile_path(:profile => profile) , options
   end
 
@@ -161,7 +161,7 @@ module ApplicationHelper
   end
 
   def link_if_permitted(link, permission = nil, target = nil)
-    if permission.nil? || current_user.person.has_permission?(permission, target)
+    if permission.nil? || current_person.has_permission?(permission, target)
       link
     else
       nil
@@ -823,8 +823,8 @@ module ApplicationHelper
       {s_('contents|More viewed') => {href: url_for({host: host, controller: 'search', action: 'contents', filter: 'more_popular'})}},
       {s_('contents|Most commented') => {href: url_for({host: host, controller: 'search', action: 'contents', filter: 'more_comments'})}}
     ]
-    if logged_in? && !current_user.external_person_id
-      links.push(_('New content') => modal_options({:href => url_for({:controller => 'cms', :action => 'new', :profile => current_user.login, :cms => true})}))
+    if logged_in?
+      links.push(_('New content') => modal_options({:href => url_for({:controller => 'cms', :action => 'new', :profile => current_person.identifier, :cms => true})}))
     end
 
     link_to(content_tag(:span, _('Contents'), :class => 'icon-menu-articles'), {:controller => "search", :action => 'contents', :category_path => nil}, :id => 'submenu-contents') +
@@ -839,9 +839,9 @@ module ApplicationHelper
        {s_('people|More active') => {href: url_for({host: host, controller: 'search', action: 'people', filter: 'more_active'})}},
        {s_('people|More popular') => {href: url_for({host: host, controller: 'search', action: 'people', filter: 'more_popular'})}}
      ]
-     if logged_in? && !current_user.external_person_id
-       links.push(_('My friends') => {:href => url_for({:profile => current_user.login, :controller => 'friends'})})
-       links.push(_('Invite friends') => {:href => url_for({:profile => current_user.login, :controller => 'invite', :action => 'friends'})})
+     if logged_in?
+       links.push(_('My friends') => {:href => url_for({:profile => current_person.identifier, :controller => 'friends'})})
+       links.push(_('Invite friends') => {:href => url_for({:profile => current_person.identifier, :controller => 'invite', :action => 'friends'})})
      end
 
     link_to(content_tag(:span, _('People'), :class => 'icon-menu-people'), {:controller => "search", :action => 'people', :category_path => ''}, :id => 'submenu-people') +
@@ -856,9 +856,9 @@ module ApplicationHelper
        {s_('communities|More active') => {href: url_for({host: host, controller: 'search', action: 'communities', filter: 'more_active'})}},
        {s_('communities|More popular') => {href: url_for({host: host, controller: 'search', action: 'communities', filter: 'more_popular'})}}
      ]
-     if logged_in? && !current_user.external_person_id
-       links.push(_('My communities') => {:href => url_for({:profile => current_user.login, :controller => 'memberships'})})
-       links.push(_('New community') => {:href => url_for({:profile => current_user.login, :controller => 'memberships', :action => 'new_community'})})
+     if logged_in?
+       links.push(_('My communities') => {:href => url_for({:profile => current_person.identifier, :controller => 'memberships'})})
+       links.push(_('New community') => {:href => url_for({:profile => current_person.identifier, :controller => 'memberships', :action => 'new_community'})})
      end
 
     link_to(content_tag(:span, _('Communities'), :class => 'icon-menu-community'), {:controller => "search", :action => 'communities'}, :id => 'submenu-communities') +

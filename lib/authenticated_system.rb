@@ -24,7 +24,7 @@ module AuthenticatedSystem
       @current_user ||= begin
         user = nil
         if session[:external]
-          user = User.new
+          user = User.new #FIXME: User needs to have at least email
           user.external_person_id = session[:external]
         else
           id = session[:user]

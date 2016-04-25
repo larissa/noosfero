@@ -1021,8 +1021,7 @@ class Environment < ActiveRecord::Base
   end
 
   def has_federated_network?(domain)
-    # FIXME: Should return whether "domain" is whitelisted in this environment as a federated network
-    true
+    self.federated_networks.map(&:url).any? {|url| /http[s]?:\/\/#{domain}\/?/ =~ url }
   end
 
   private

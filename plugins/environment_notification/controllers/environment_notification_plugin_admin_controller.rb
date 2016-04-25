@@ -97,7 +97,7 @@ class EnvironmentNotificationPluginAdminController < AdminController
 
   protected
   def admin_required
-    redirect_to :root unless current_user.person.is_admin?
+    redirect_to :root unless current_person.is_admin?
   end
 
 end

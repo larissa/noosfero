@@ -49,8 +49,9 @@ module ExternalUser
           webfinger = OpenStruct.new(
                         identifier: user['user']['person']['identifier'],
                         name: user['user']['person']['name'],
+                        created_at: user['user']['person']['created_at'],
                         domain: domain,
-                        email_md5: Digest::MD5.hexdigest(user['user']['email'])
+                        email: user['user']['email']
                       )
           u.external_person_id = ExternalPerson.get_or_create(webfinger).id
           return u

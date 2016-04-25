@@ -1,4 +1,4 @@
-<% if current_user && current_user.person.is_admin? %>
+<% if current_user && current_person.is_admin? %>
   <% active_notifications = EnvironmentNotificationPlugin::EnvironmentNotification.active(environment) %>
   <% unless active_notifications.blank? %>
     <div class="environment-notification-plugin-notification-bar">
